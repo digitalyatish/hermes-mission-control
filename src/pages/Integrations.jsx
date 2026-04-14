@@ -292,9 +292,9 @@ const API_REFERENCE = [
     actions: [
       {
         name: 'notify.send_email',
-        description: 'Send an email via Resend. Defaults to mani@growthcreators.ai. Agents use this for alerts, reports, summaries, or any notification.',
-        request: `{ "action": "notify.send_email", "params": { "subject": "Daily Briefing", "body_html": "<h2>Report</h2><p>5 meetings analyzed, 3 insights generated</p>", "to": "mani@growthcreators.ai" } }`,
-        response: `{ "ok": true, "data": { "resend_id": "...", "to": "mani@growthcreators.ai", "subject": "Daily Briefing" } }`,
+        description: 'Send an email via Resend. Defaults to your-email@example.com. Agents use this for alerts, reports, summaries, or any notification.',
+        request: `{ "action": "notify.send_email", "params": { "subject": "Daily Briefing", "body_html": "<h2>Report</h2><p>5 meetings analyzed, 3 insights generated</p>", "to": "your-email@example.com" } }`,
+        response: `{ "ok": true, "data": { "resend_id": "...", "to": "your-email@example.com", "subject": "Daily Briefing" } }`,
       },
     ],
   },
@@ -470,8 +470,8 @@ function generateFullDocs(apiKey) {
     `- **Nurture Sender**: \`${supabaseUrl}/functions/v1/nurture-sender\` — cron-triggered (every 15 min), sends scheduled nurture emails via Resend`,
     '',
     '### Email Sending',
-    '- Default sender: `Mani Kanasani <mani@updates.growthcreators.ai>`',
-    '- Reply-to: `mani@growthcreators.ai`',
+    '- Default sender: `Your Name <your-email@example.com>`',
+    '- Reply-to: `your-email@example.com`',
     '- All outreach emails auto-include unsubscribe footer',
     '- Use `notify.send_email` for alerts/reports to Mani',
     '- Use `emails.send` / `emails.send_batch` for campaign outreach via Resend',

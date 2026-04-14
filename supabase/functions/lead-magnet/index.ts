@@ -64,15 +64,15 @@ Deno.serve(async (req: Request) => {
 </head>
 <body>
   <div class="header">
-    <p>Growth Creators AI</p>
+    <p>Your Company</p>
     <h1>${magnet.title || "Report"}</h1>
   </div>
   <div class="content">${magnet.content_html || "<p>Content not yet generated.</p>"}</div>
   <div class="cta">
-    <a href="https://mani.wiki/discovery">Book a Discovery Call</a>
+    <a href="#">Book a Discovery Call</a>
   </div>
   <div class="footer">
-    <p>Prepared by Growth Creators AI &bull; Powered by Hermes</p>
+    <p>Powered by Hermes Mission Control</p>
   </div>
 </body>
 </html>`;

@@ -18,38 +18,38 @@ function getDefaultBody(type: string, name: string, company: string, meetingTime
 <p>This will be a no-pressure chat to understand your business and explore whether we can help. I've worked with 13+ businesses across healthcare, real estate, e-commerce, and more — so I'll have relevant context no matter your industry.</p>
 ${company ? `<p>I'll do some homework on ${company} before our call so we can make the most of our time together.</p>` : ""}
 <p>Here's your meeting link for quick reference: <a href="${meetingLink}">${meetingLink}</a></p>
-<p>Talk soon,<br>Mani</p>`,
+<p>Talk soon,<br>${Deno.env.get("DEFAULT_FROM_NAME")?.split(" ")[0] || "Team"}</p>`,
 
     value_1: `<p>Hi ${firstName},</p>
 <p>Wanted to share a quick case study before our call.</p>
 <p>We recently helped a business deploy an AI system that <strong>reduced their manual workload by 70%</strong> and added <strong>$50,000 in revenue within 30 days</strong>. The entire build took 6 weeks from kickoff to live.</p>
 <p>The key was identifying the highest-leverage processes first — not trying to automate everything at once.</p>
 <p>I'll share more about how this could apply to ${company || "your business"} on our call.</p>
-<p>Best,<br>Mani</p>`,
+<p>Best,<br>${Deno.env.get("DEFAULT_FROM_NAME")?.split(" ")[0] || "Team"}</p>`,
 
     value_2: `<p>Hi ${firstName},</p>
 <p>One more thing I thought you'd find interesting.</p>
 <p>A common pattern we see: businesses spend 15-20 hours per week on tasks that AI can handle in minutes — scheduling, data entry, follow-ups, report generation. The teams that move fastest are the ones that start with <strong>one specific workflow</strong> rather than a big overhaul.</p>
 <p>When we talk on ${dateStr}, I'd love to understand what's taking up most of your team's time right now. That usually points straight to the highest-ROI opportunity.</p>
-<p>See you soon,<br>Mani</p>`,
+<p>See you soon,<br>${Deno.env.get("DEFAULT_FROM_NAME")?.split(" ")[0] || "Team"}</p>`,
 
     value_3: `<p>Hi ${firstName},</p>
 <p>Quick thought — I've been looking into ${company || "businesses in your space"} and I see some interesting opportunities for automation.</p>
 <p>I'll walk through my observations on our call, but the short version: there's likely $30-50K in annual value sitting in processes that could be streamlined with the right AI setup.</p>
 <p>Looking forward to ${dateStr}.</p>
-<p>Mani</p>`,
+<p>${Deno.env.get("DEFAULT_FROM_NAME")?.split(" ")[0] || "Team"}</p>`,
 
     reminder_24h: `<p>Hi ${firstName},</p>
 <p>Quick reminder — we're on for <strong>tomorrow at ${timeStr}</strong>.</p>
 <p><a href="${meetingLink}">Join the call here</a></p>
 <p>If you have any specific pain points or numbers in mind, it helps us make the most of our 30 minutes. But no prep needed — I'll come with questions and ideas based on what I know about ${company || "your business"}.</p>
-<p>See you tomorrow,<br>Mani</p>`,
+<p>See you tomorrow,<br>${Deno.env.get("DEFAULT_FROM_NAME")?.split(" ")[0] || "Team"}</p>`,
 
     reminder_1h: `<p>Hi ${firstName},</p>
 <p>We're starting in 1 hour.</p>
 <p><strong><a href="${meetingLink}">Join here</a></strong></p>
 <p>Looking forward to it.</p>
-<p>Mani</p>`,
+<p>${Deno.env.get("DEFAULT_FROM_NAME")?.split(" ")[0] || "Team"}</p>`,
   };
 
   return templates[type] || templates.welcome;
@@ -116,9 +116,9 @@ Deno.serve(async (req: Request) => {
           method: "POST",
           headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
-            from: "Mani Kanasani <mani@updates.growthcreators.ai>",
+            from: "${Deno.env.get("DEFAULT_FROM_NAME") || "Your Name"} <${Deno.env.get("DEFAULT_FROM_EMAIL") || "your-email@example.com"}>",
             to: [seq.prospect_email],
-            reply_to: "mani@growthcreators.ai",
+            reply_to: Deno.env.get("DEFAULT_REPLY_TO") || "your-email@example.com",
             subject,
             html: bodyHtml,
           }),

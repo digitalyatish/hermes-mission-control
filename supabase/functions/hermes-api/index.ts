@@ -935,9 +935,9 @@ Deno.serve(async (req: Request) => {
       const resendKey = Deno.env.get("RESEND_API_KEY");
       if (!resendKey) return err("RESEND_API_KEY not configured", 500);
 
-      const recipient = to || "mani@growthcreators.ai";
-      const senderName = from_name || "Mani Kanasani";
-      const senderEmail = from_email || "mani@updates.growthcreators.ai";
+      const recipient = to || Deno.env.get("DEFAULT_REPLY_TO") || "your-email@example.com";
+      const senderName = from_name || Deno.env.get("DEFAULT_FROM_NAME") || "Your Name";
+      const senderEmail = from_email || Deno.env.get("DEFAULT_FROM_EMAIL") || "your-email@example.com";
       const html = body_html || `<pre style="font-family:monospace;white-space:pre-wrap;color:#e8edf5;background:#0A0A0F;padding:24px;border-radius:8px;">${body_text}</pre>`;
 
       const resp = await fetch("https://api.resend.com/emails", {
@@ -946,7 +946,7 @@ Deno.serve(async (req: Request) => {
         body: JSON.stringify({
           from: `${senderName} <${senderEmail}>`,
           to: [recipient],
-          reply_to: "mani@growthcreators.ai",
+          reply_to: Deno.env.get("DEFAULT_REPLY_TO") || "your-email@example.com",
           subject,
           html,
           text: body_text,
@@ -1578,9 +1578,9 @@ Deno.serve(async (req: Request) => {
             method: "POST",
             headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              from: "Mani Kanasani <mani@updates.growthcreators.ai>",
-              to: ["mani@growthcreators.ai"],
-              reply_to: "mani@growthcreators.ai",
+              from: `${Deno.env.get("DEFAULT_FROM_NAME") || "Your Name"} <${Deno.env.get("DEFAULT_FROM_EMAIL") || "your-email@example.com"}>`,
+              to: [Deno.env.get("DEFAULT_REPLY_TO") || "your-email@example.com"],
+              reply_to: Deno.env.get("DEFAULT_REPLY_TO") || "your-email@example.com",
               subject: `Campaign Ready: ${camp.name}`,
               html: `<p>Your campaign <strong>${camp.name}</strong> is ready for review.</p>
 <p><strong>${camp.total_leads || 0}</strong> leads, <strong>${camp.sequence_steps || 1}</strong>-email sequence.</p>
@@ -2047,16 +2047,16 @@ ${agent_notes ? `<p><em>Agent notes:</em> ${agent_notes}</p>` : ""}
 
       const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
       const unsubUrl = `${supabaseUrl}/functions/v1/unsubscribe?email=${encodeURIComponent(p.to_email as string)}&campaign=${p.campaign_id}`;
-      const footer = `<div style="margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;font-size:12px;color:#9ca3af;"><p>${p.from_name || "Mani Kanasani"} | Growth Creators</p><p><a href="${unsubUrl}" style="color:#9ca3af;">Unsubscribe</a></p></div>`;
+      const footer = `<div style="margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;font-size:12px;color:#9ca3af;"><p>${p.from_name || Deno.env.get("DEFAULT_FROM_NAME") || "Your Name"} | Growth Creators</p><p><a href="${unsubUrl}" style="color:#9ca3af;">Unsubscribe</a></p></div>`;
       const htmlWithFooter = (p.body_html as string) + footer;
 
       const resp = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
-          from: `${p.from_name || "Mani Kanasani"} <${p.from_email || "mani@updates.growthcreators.ai"}>`,
+          from: `${p.from_name || Deno.env.get("DEFAULT_FROM_NAME") || "Your Name"} <${p.from_email || Deno.env.get("DEFAULT_FROM_EMAIL") || "your-email@example.com"}>`,
           to: [p.to_email],
-          reply_to: p.reply_to || p.from_email || "mani@updates.growthcreators.ai",
+          reply_to: p.reply_to || p.from_email || Deno.env.get("DEFAULT_FROM_EMAIL") || "your-email@example.com",
           subject: p.subject,
           html: htmlWithFooter,
           text: p.body_text,
@@ -2079,7 +2079,7 @@ ${agent_notes ? `<p><em>Agent notes:</em> ${agent_notes}</p>` : ""}
         subject: p.subject,
         body_html: htmlWithFooter,
         body_text: p.body_text,
-        from_email: p.from_email || "mani@updates.growthcreators.ai",
+        from_email: p.from_email || Deno.env.get("DEFAULT_FROM_EMAIL") || "your-email@example.com",
         to_email: p.to_email,
         status: "sent",
         sent_at: new Date().toISOString(),
@@ -2116,12 +2116,12 @@ ${agent_notes ? `<p><em>Agent notes:</em> ${agent_notes}</p>` : ""}
             if (!resendKey) throw new Error("RESEND_API_KEY not configured");
             const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
             const unsubUrl = `${supabaseUrl}/functions/v1/unsubscribe?email=${encodeURIComponent(e.to_email as string)}&campaign=${e.campaign_id}`;
-            const footer = `<div style="margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;font-size:12px;color:#9ca3af;"><p>${e.from_name || "Mani Kanasani"} | Growth Creators</p><p><a href="${unsubUrl}" style="color:#9ca3af;">Unsubscribe</a></p></div>`;
+            const footer = `<div style="margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;font-size:12px;color:#9ca3af;"><p>${e.from_name || Deno.env.get("DEFAULT_FROM_NAME") || "Your Name"} | Growth Creators</p><p><a href="${unsubUrl}" style="color:#9ca3af;">Unsubscribe</a></p></div>`;
             const resp = await fetch("https://api.resend.com/emails", {
               method: "POST",
               headers: { "Authorization": `Bearer ${resendKey}`, "Content-Type": "application/json" },
               body: JSON.stringify({
-                from: `${e.from_name || "Mani Kanasani"} <${e.from_email || "mani@updates.growthcreators.ai"}>`,
+                from: `${e.from_name || Deno.env.get("DEFAULT_FROM_NAME") || "Your Name"} <${e.from_email || Deno.env.get("DEFAULT_FROM_EMAIL") || "your-email@example.com"}>`,
                 to: [e.to_email], reply_to: e.reply_to || e.from_email, subject: e.subject, html: (e.body_html as string) + footer,
               }),
             });
@@ -2130,7 +2130,7 @@ ${agent_notes ? `<p><em>Agent notes:</em> ${agent_notes}</p>` : ""}
             await supabase.from("email_sends").insert({
               campaign_id: e.campaign_id, campaign_lead_id: e.campaign_lead_id, lead_id: e.lead_id,
               resend_id: r.id, step_number: e.step_number || 1, variant_index: e.variant_index || 0,
-              subject: e.subject, body_html: (e.body_html as string) + footer, from_email: e.from_email || "mani@updates.growthcreators.ai",
+              subject: e.subject, body_html: (e.body_html as string) + footer, from_email: e.from_email || Deno.env.get("DEFAULT_FROM_EMAIL") || "your-email@example.com",
               to_email: e.to_email, status: "sent", sent_at: new Date().toISOString(),
             });
             return { to: e.to_email, resend_id: r.id, ok: true };

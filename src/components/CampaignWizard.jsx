@@ -46,9 +46,9 @@ export default function CampaignWizard({ onClose, onCreated }) {
   const [aiGuidance, setAiGuidance] = useState('')
 
   // Step 4: Schedule
-  const [fromName, setFromName] = useState('Mani Kanasani')
-  const [fromEmail, setFromEmail] = useState('mani@updates.growthcreators.ai')
-  const [replyTo, setReplyTo] = useState('mani@growthcreators.ai')
+  const [fromName, setFromName] = useState('')
+  const [fromEmail, setFromEmail] = useState('')
+  const [replyTo, setReplyTo] = useState('')
   const [sendStart, setSendStart] = useState(9)
   const [sendEnd, setSendEnd] = useState(17)
   const [dailyLimit, setDailyLimit] = useState(30)

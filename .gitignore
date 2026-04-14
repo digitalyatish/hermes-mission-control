@@ -26,3 +26,5 @@ Thumbs.db
 *.log
 npm-debug.log*
 start-dev.sh
+supabase/.temp/
+.claude/

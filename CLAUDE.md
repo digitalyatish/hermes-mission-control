@@ -16,22 +16,22 @@ The `hermes-api` Edge Function at `/functions/v1/hermes-api` is the single API e
 
 ## TECH STACK
 - **Frontend:** React 19 + Vite 8 + Tailwind CSS 4 + Framer Motion + Recharts + Lucide React + React Markdown
-- **Backend:** Supabase (PostgreSQL + Edge Functions), project ID: `smmquuwzdininxleloom`
+- **Backend:** Supabase (PostgreSQL + Edge Functions)
 - **APIs:** Fathom (meetings), Resend (email), Apify (lead scraping), Cal.com (bookings)
 - **AI Agent:** Hermes Agent (autonomous, creates skills, learns over time)
-- **Node:** `/opt/homebrew/bin/node` v25 — always `export PATH="/opt/homebrew/bin:$PATH"` before npm/npx
+- **Node:** `/opt/homebrew/bin/node` — always `export PATH="/opt/homebrew/bin:$PATH"` before npm/npx
 
 ## SUPABASE PROJECT
-- URL: `https://smmquuwzdininxleloom.supabase.co`
-- Edge Functions base: `https://smmquuwzdininxleloom.supabase.co/functions/v1/`
+- URL: Set in `.env.local` as `VITE_SUPABASE_URL`
+- Edge Functions base: `{VITE_SUPABASE_URL}/functions/v1/`
 - Deploy: `supabase functions deploy <name> --no-verify-jwt`
 - Secrets set via: `supabase secrets set KEY=value`
+- Link project: `supabase link --project-ref <your-project-id>`
 
 ## EMAIL SENDING
-- All outreach/campaign/notification emails: `Mani Kanasani <mani@updates.growthcreators.ai>`
-- Reply-to: `mani@growthcreators.ai`
-- NEVER use "Hermes Mission Control" as a sender name
+- Default sender configured via Supabase secrets: `DEFAULT_FROM_NAME`, `DEFAULT_FROM_EMAIL`, `DEFAULT_REPLY_TO`
 - All campaign emails auto-include unsubscribe footer
+- Set your verified domain in Resend before sending
 
 ## EDGE FUNCTIONS (8 deployed)
 | Function | Purpose |
